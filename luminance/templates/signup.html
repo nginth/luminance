@@ -1,10 +1,13 @@
-<!doctype html>
-<title>Luminance</title>
-<h3>Signup</h3>
-<div>
-    <form method="POST" action="/signup">
-        <div>{{ form.username.label }}: {{ form.username() }}</div>
-        <div>{{ form.password.label }}: {{ form.password() }}</div>
-        <div>{{ form.submit() }}</div>
-    </form>
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+    <h3>Signup</h3>
+    <div>
+        <form method="POST" action="/signup">
+            <div>{{ form.username.label }}: {{ form.username() }}</div>
+            <div>{{ form.password.label }}: {{ form.password() }}</div>
+            <div>{{ form.submit() }}</div>
+        </form>
+    </div>
 </div>
+{% endblock %}

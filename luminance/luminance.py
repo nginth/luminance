@@ -75,7 +75,6 @@ def load_user(user_id):
 @login_manager.unauthorized_handler
 def unauthorized():
     flash("You have to be logged in to access this page.")
-    print('url rule' + request.url_rule.rule)
     return redirect(url_for('login', next=request.endpoint))
 
 @app.teardown_appcontext

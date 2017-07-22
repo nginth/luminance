@@ -1,11 +1,13 @@
 {% extends "layout.html" %}
 {% block body %}
-<h3>Luminance</h3>
-<div>
-    {% if current_user.is_authenticated %}
-    <p>Hello {{ current_user.username }}! Exp: {{ current_user.exp }} </p>
-    {% endif %}
+<div class="container">
+    <h3>Luminance</h3>
+    <div>
+        {% if current_user.is_authenticated %}
+        <p>Hello {{ current_user.username }}! Exp: {{ current_user.exp }} </p>
+        {% else %}
+        <p> Hi, welcome to Luminance! </p>
+        {% endif %}
+    </div>
 </div>
-<div><a href="/login">login</a></div>
-<div><a href="/logout">logout</a></div>
 {% endblock %}
