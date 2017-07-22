@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+<h3>Luminance</h3>
+<div>
+    <p>Current user {{ current_user.username }} is authenticated? {{ current_user.is_authenticated }}</p>
+</div>
+<div><a href="/login">login</a></div>
+<div><a href="/logout">logout</a></div>
+{% endblock %}

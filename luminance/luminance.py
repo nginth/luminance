@@ -1,0 +1,82 @@
+import json
+import os
+from flask import (
+    Flask, 
+    render_template, 
+    request, 
+    flash, 
+    redirect, 
+    url_for
+)
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_user, login_required, current_user, logout_user
+from .forms import RegistrationForm, LoginForm
+from .database import db_session
+from .models import User
+from .auth import is_safe_url
+
+app = Flask(__name__)
+app.config.from_pyfile('config.py')
+db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@app.route('/')
+def index(): 
+    return render_template('index.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm(request.form)
+    
+    if request.method == 'POST' and form.validate():
+        user = User.query.filter(User.username == form.username.data).first()
+        if user and user.authenticate(form.password.data):
+            login_user(user)
+            flash('You have been logged in successfully.')
+            next = request.args.get('next')
+            if not is_safe_url(next):
+                return flask.abort(400)
+            return redirect(next or url_for('index'))
+        else:
+            flash('Error logging in.')
+            return redirect(url_for('login'))
+
+    return render_template('login.html', form=form)
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = RegistrationForm(request.form)
+    print(request.form)
+    if request.method == 'POST' and form.validate():
+        user = User(username=form.username.data, password=form.password.data)
+        db_session.add(user)
+        db_session.commit()
+        flash('Thanks for registering!!')
+        return redirect(url_for('login'))
+
+    return render_template('signup.html', form=form)
+
+@app.route('/secret')
+@login_required
+def authenticated_endpoint():
+    return 'hi ' + current_user.username
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.filter(User.id == user_id).first()
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
+
+with open(os.getcwd() + '/secrets.json') as data_file:
+    print(os.getcwd())
+    app.secret_key = json.load(data_file)['secret_key']
+

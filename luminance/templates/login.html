@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block body %}
+<h3>Login</h3>
+<div>
+    <form method="POST" action="/login">
+        <div>{{ form.username.label }}: {{ form.username() }}</div>
+        <div>{{ form.password.label }}: {{ form.password() }}</div>
+        <div><button type="submit">Submit</button>
+    </form>
+</div>
+{% endblock %}

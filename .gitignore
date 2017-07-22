@@ -1,0 +1,5 @@
+venv/*
+.vscode/*
+secrets.json
+luminance/__pycache__/*
+notes.txt
