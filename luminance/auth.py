@@ -1,4 +1,3 @@
-from werkzeug.security import generate_password_hash, check_password_hash
 from urllib.parse import urlparse, urljoin
 from flask import request, url_for
 

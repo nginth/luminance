@@ -5,7 +5,7 @@
     <form method="POST" action="/login">
         <div>{{ form.username.label }}: {{ form.username() }}</div>
         <div>{{ form.password.label }}: {{ form.password() }}</div>
-        <div><button type="submit">Submit</button>
+        <div>{{ form.submit() }}</div>
     </form>
 </div>
 {% endblock %}
