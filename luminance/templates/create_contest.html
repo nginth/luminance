@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+    <h3>Create contest</h3>
+    <div>
+        <form method="POST" action="/contest">
+            <div>{{ form.name.label }}: {{ form.name() }}</div>
+            <div>{{ form.submit() }}</div>
+        </form>
+    </div>
+</div>
+{% endblock %}

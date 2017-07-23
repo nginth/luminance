@@ -10,9 +10,9 @@ from flask import (
 )
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
-from .forms import RegistrationForm, LoginForm
+from .forms import RegistrationForm, LoginForm, ContestForm
 from .database import db_session
-from .models import User
+from .models import User, Contest
 from .auth import is_safe_url
 
 app = Flask(__name__)
@@ -62,6 +62,20 @@ def signup():
         return redirect(url_for('login'))
 
     return render_template('signup.html', form=form)
+
+@app.route('/contest', methods=['GET', 'POST'])
+@login_required
+def contest():
+    form = ContestForm(request.form)
+    if request.method == 'POST' and form.validate():
+        contest = Contest(name=form.name.data)
+        contest.users.append(current_user)
+        db_session.add(contest)
+        db_session.commit()
+        flash('Contest created.')
+        return redirect(url_for('contest'))
+
+    return render_template('create_contest.html', form=form)
 
 @app.route('/secret')
 @login_required

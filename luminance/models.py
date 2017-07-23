@@ -1,12 +1,19 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, Table, ForeignKey
 from sqlalchemy.orm import relationship
 from luminance.database import Base
 from werkzeug.security import generate_password_hash, check_password_hash
+
+users_contests = Table('users_contests', 
+    Base.metadata,
+    Column('user_id', Integer(), ForeignKey('users.id')),
+    Column('contest_id', Integer(), ForeignKey('contests.id'))
+)
 
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     username = Column(String(50), unique=True)
+    session_key = Column(String(64), unique=True)
     pw_hash = Column(String(512))
     email = Column(String(120), unique=True)
     exp = Column(Integer)
@@ -44,3 +51,19 @@ class User(Base):
 
     def __repr__(self):
         return '<User {}, exp {}>'.format(self.username, self.exp)
+
+class Contest(Base):
+    __tablename__ = 'contests'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(1024), unique=True)
+    users = relationship(
+        "User",
+        secondary=users_contests,
+        backref="contests"
+    )
+
+    def __init__(self, name=None):
+        self.name = name
+
+    def __repr__(self):
+        return '<Contest {}>'.format(self.name)
