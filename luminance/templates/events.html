@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+    <h3>Events</h3>
+    <div>
+        <ul>
+            {% for event in events %}
+                <li>
+                    <div>Name: {{ event.name }}</div>
+                    <div>Type: {{ event.type }}</div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

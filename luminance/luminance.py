@@ -78,6 +78,11 @@ def contest():
 
     return render_template('create_contest.html', form=form)
 
+@app.route('/events')
+def events():
+    events = Event.query.limit(10)
+    return render_template('events.html', events=events)
+
 @app.route('/secret')
 @login_required
 def secret():
