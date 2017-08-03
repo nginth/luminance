@@ -12,7 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from .forms import RegistrationForm, LoginForm, ContestForm
 from .database import db_session
-from .models import User, Contest
+from .models import User, Event
 from .auth import is_safe_url
 
 app = Flask(__name__)
@@ -69,6 +69,7 @@ def contest():
     form = ContestForm(request.form)
     if request.method == 'POST' and form.validate():
         contest = Event(name=form.name.data)
+        contest.type = 'contest'
         contest.users.append(current_user)
         db_session.add(contest)
         db_session.commit()
