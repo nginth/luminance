@@ -68,7 +68,7 @@ def signup():
 def contest():
     form = ContestForm(request.form)
     if request.method == 'POST' and form.validate():
-        contest = Contest(name=form.name.data)
+        contest = Event(name=form.name.data)
         contest.users.append(current_user)
         db_session.add(contest)
         db_session.commit()

@@ -3,10 +3,10 @@ from sqlalchemy.orm import relationship
 from luminance.database import Base
 from werkzeug.security import generate_password_hash, check_password_hash
 
-users_contests = Table('users_contests', 
+users_contests = Table('users_events', 
     Base.metadata,
     Column('user_id', Integer(), ForeignKey('users.id')),
-    Column('contest_id', Integer(), ForeignKey('contests.id'))
+    Column('event_id', Integer(), ForeignKey('events.id'))
 )
 
 class User(Base):
@@ -52,18 +52,19 @@ class User(Base):
     def __repr__(self):
         return '<User {}, exp {}>'.format(self.username, self.exp)
 
-class Contest(Base):
-    __tablename__ = 'contests'
+class Event(Base):
+    __tablename__ = 'events'
     id = Column(Integer, primary_key=True)
     name = Column(String(1024), unique=True)
     users = relationship(
         "User",
         secondary=users_contests,
-        backref="contests"
+        backref="events"
     )
+    type = Column(String(512))
 
     def __init__(self, name=None):
         self.name = name
 
     def __repr__(self):
-        return '<Contest {}>'.format(self.name)
+        return '<Event<{}> {}>'.format(self.type, self.name)
