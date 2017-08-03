@@ -88,6 +88,13 @@ def events():
 def secret():
     return 'hi ' + current_user.username
 
+@app.route('/users/<string:username>')
+def profile_page(username):
+    print(username)
+    user = User.query.filter(User.username == username).first()
+    print(user)
+    return render_template('profile.html', user=user)
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.filter(User.id == user_id).first()

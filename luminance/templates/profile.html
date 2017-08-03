@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+    {% if user %}
+        <h3>{{ user.username }}'s Profile</h3>
+        <h4>Bio</h4>
+        <div>
+            {{ user.description }}
+        </div>
+    {% else %}
+        <div> User not found. </div>
+    {% endif %}
+</div>
+{% endblock %}
