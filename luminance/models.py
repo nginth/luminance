@@ -1,4 +1,12 @@
-from sqlalchemy import Column, Integer, String, Boolean, Table, ForeignKey
+from sqlalchemy import (
+    Column, 
+    Integer, 
+    String, 
+    Boolean, 
+    Table, 
+    ForeignKey,
+    DateTime
+)
 from sqlalchemy.orm import relationship
 from luminance.database import Base
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -62,6 +70,8 @@ class Event(Base):
         backref="events"
     )
     type = Column(String(512))
+    start_date = Column(DateTime)
+    end_date = Column(DateTime)
 
     def __init__(self, name=None):
         self.name = name

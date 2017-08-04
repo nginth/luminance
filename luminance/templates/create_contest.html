@@ -5,6 +5,8 @@
     <div>
         <form method="POST" action="/contest">
             <div>{{ form.name.label }}: {{ form.name() }}</div>
+            <div>{{ form.start_date.label }}: {{ form.start_date(type="datetime-local") }}</div>
+            <div>{{ form.end_date.label }}: {{ form.end_date(type="datetime-local") }}</div>
             <div>{{ form.submit() }}</div>
         </form>
     </div>
