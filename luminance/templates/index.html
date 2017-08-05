@@ -5,7 +5,6 @@
     <div>
         {% if current_user.is_authenticated %}
         <p>Hello {{ current_user.username }}! Exp: {{ current_user.exp }} </p>
-        <a href="/contest">create contest</a>
         {% else %}
         <p> Hi, welcome to Luminance! </p>
         {% endif %}
