@@ -32,7 +32,10 @@ def login():
             return redirect(next or url_for('index'))
         else:
             flash('Error logging in.')
-            return redirect(url_for('login'))
+            return redirect(url_for('login'))    
+    elif request.method == 'POST':
+        flash('Error logging in.')
+        return redirect(url_for('login'))
 
     return render_template('login.html', form=form)
 
