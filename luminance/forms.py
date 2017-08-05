@@ -4,6 +4,7 @@ from wtforms import (
     PasswordField, 
     SubmitField,
     DateTimeField,
+    HiddenField,
     validators
 )
 
@@ -22,3 +23,7 @@ class ContestForm(Form):
     start_date = DateTimeField('start_date', format="%Y-%m-%dT%H:%M", validators=[validators.Optional()])
     end_date = DateTimeField('end_date', format="%Y-%m-%dT%H:%M", validators=[validators.Optional()])
     submit = SubmitField('create')
+
+class AddUserToEventForm(Form):
+    event_id = HiddenField('event_id')
+    submit = SubmitField('register')

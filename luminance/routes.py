@@ -8,7 +8,7 @@ from flask import (
 )
 from luminance.luminance import app, login_manager
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
-from .forms import RegistrationForm, LoginForm, ContestForm
+from .forms import RegistrationForm, LoginForm, ContestForm, AddUserToEventForm
 from .database import db_session
 from .models import User, Event
 from .auth import is_safe_url
@@ -79,10 +79,27 @@ def contest():
 
     return render_template('create_contest.html', form=form)
 
-@app.route('/events')
+@app.route('/events', methods=['GET', 'POST'])
 def events():
-    events = Event.query.limit(10)
-    return render_template('events.html', events=events)
+    form = AddUserToEventForm(request.form)
+    if request.method == 'POST' and form.validate():
+        if current_user.is_anonymous or not current_user.is_authenticated:
+            flash('You must log in to register for events.')
+            return redirect(url_for('events'))
+        
+        event = Event.query.filter(Event.id == form.event_id.data).first()
+        if current_user in event.users:
+            flash('You are already registered for this event!')
+            return redirect(url_for('events'))
+        else: 
+            event.users.append(current_user)
+            db_session.add(event)
+            db_session.commit()
+            flash('Registration successful!')
+            return redirect(url_for('events'))
+    else:
+        events = Event.query.limit(10)
+        return render_template('events.html', events=events, form=form)
 
 @app.route('/secret')
 @login_required
