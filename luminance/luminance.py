@@ -70,8 +70,12 @@ def contest():
     if request.method == 'POST' and form.validate():
         contest = Event(name=form.name.data)
         contest.type = 'contest'
-        contest.start_date = form.start_date.data
-        contest.end_date = form.end_date.data
+        print(form.start_date.data)
+        print(form.end_date.data)
+        if form.start_date.data:
+            contest.start_date = form.start_date.data
+        if form.end_date.data:
+            contest.end_date = form.end_date.data
         contest.users.append(current_user)
         db_session.add(contest)
         db_session.commit()

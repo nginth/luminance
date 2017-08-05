@@ -19,6 +19,6 @@ class LoginForm(Form):
 
 class ContestForm(Form):
     name = StringField('name', [validators.Length(min=1, max=1024)])
-    start_date = DateTimeField('start_date', format="%Y-%m-%dT%H:%M")
-    end_date = DateTimeField('end_date', format="%Y-%m-%dT%H:%M")
+    start_date = DateTimeField('start_date', format="%Y-%m-%dT%H:%M", validators=[validators.Optional()])
+    end_date = DateTimeField('end_date', format="%Y-%m-%dT%H:%M", validators=[validators.Optional()])
     submit = SubmitField('create')
