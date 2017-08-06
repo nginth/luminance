@@ -101,6 +101,11 @@ def events():
         events = Event.query.limit(10)
         return render_template('events.html', events=events, form=form)
 
+@app.route('/events/<int:event_id>')
+def event_detail(event_id):
+    event = Event.query.filter(Event.id == event_id).first()
+    return render_template('event_detail.html', event=event)
+
 @app.route('/secret')
 @login_required
 def secret():
