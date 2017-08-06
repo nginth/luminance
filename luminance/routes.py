@@ -12,6 +12,7 @@ from .forms import RegistrationForm, LoginForm, ContestForm, AddUserToEventForm
 from .database import db_session
 from .models import User, Event
 from .auth import is_safe_url
+from .flickr import flickr
 
 @app.route('/')
 def index(): 
@@ -105,6 +106,11 @@ def events():
 def event_detail(event_id):
     event = Event.query.filter(Event.id == event_id).first()
     return render_template('event_detail.html', event=event)
+
+# @app.route('/photos/test')
+# def flickr_test():
+#     photos = flickr.photos.getPopular()
+#     return render_template('photos.html', photos=photos)
 
 @app.route('/secret')
 @login_required
