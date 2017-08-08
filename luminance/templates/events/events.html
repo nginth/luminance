@@ -5,7 +5,7 @@
     <div>
         <ul>
             {% for event in events %}
-                <form method="POST" action="/events">
+                <form method="POST" action="/events/">
                     <li>
                         <div><a href="/events/{{event.id}}">Name: {{ event.name }}</a></div>
                         <div>Type: {{ event.type }}</div>

@@ -84,33 +84,6 @@ def contest():
 
     return render_template('create_contest.html', form=form)
 
-@pages.route('/events', methods=['GET', 'POST'])
-def events():
-    form = AddUserToEventForm(request.form)
-    if request.method == 'POST' and form.validate():
-        if current_user.is_anonymous or not current_user.is_authenticated:
-            flash('You must log in to register for events.')
-            return redirect(url_for('pages.events'))
-        
-        event = Event.query.filter(Event.id == form.event_id.data).first()
-        if current_user in event.users:
-            flash('You are already registered for this event!')
-            return redirect(url_for('pages.events'))
-        else: 
-            event.users.append(current_user)
-            db_session.add(event)
-            db_session.commit()
-            flash('Registration successful!')
-            return redirect(url_for('pages.events'))
-    else:
-        events = Event.query.limit(10)
-        return render_template('events.html', events=events, form=form)
-
-@pages.route('/events/<int:event_id>')
-def event_detail(event_id):
-    event = Event.query.filter(Event.id == event_id).first()
-    return render_template('event_detail.html', event=event)
-
 # @pages.route('/photos/test')
 # def flickr_test():
 #     photos = flickr.photos.getPopular()
