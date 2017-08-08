@@ -1,23 +1,28 @@
 import json
 import os
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from .database import db_session
+from .database import db, db_session
+from .auth import login_manager
+from .routes import pages
 
-app = Flask(__name__)
-app.config.from_pyfile('config.py')
-db = SQLAlchemy(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
+def create_app(config_filename):
+    app = Flask(__name__)
+    app.config.from_pyfile(config_filename)
+    db.init_app(app)
+    login_manager.init_app(app)
 
-import luminance.routes
+    with open(os.getcwd() + '/secrets.json') as data_file:
+        app.secret_key = json.load(data_file)['secret_key']
+
+    return app
+
+app = create_app('config.py')
+app.register_blueprint(pages)
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()
 
-with open(os.getcwd() + '/secrets.json') as data_file:
-    print(os.getcwd())
-    app.secret_key = json.load(data_file)['secret_key']
+import luminance.routes
+
 

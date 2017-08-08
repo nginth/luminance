@@ -1,5 +1,8 @@
 from urllib.parse import urlparse, urljoin
 from flask import request, url_for
+from flask_login import LoginManager
+
+login_manager = LoginManager()
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
