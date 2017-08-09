@@ -84,10 +84,12 @@ def contest():
 
     return render_template('create_contest.html', form=form)
 
-# @pages.route('/photos/test')
-# def flickr_test():
-#     photos = flickr.photos.getPopular()
-#     return render_template('photos.html', photos=photos)
+@pages.route('/photos/test')
+def flickr_test():
+    photos = flickr.photos.getPopular(user_id='73509078@N00')['photos']['photo']
+    template_url = "https://farm{}.staticflickr.com/{}/{}_{}.jpg"
+    photo_urls = [template_url.format(p['farm'], p['server'], p['id'], p['secret']) for p in photos]
+    return render_template('photos.html', photo_urls=photo_urls)
 
 @pages.route('/secret')
 @login_required
