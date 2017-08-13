@@ -10,4 +10,5 @@ with open(os.getcwd() + '/secrets.json') as data_file:
     api_key = secrets['flickr']['key']
     api_secret = secrets['flickr']['secret']
 
-flickr = flickrapi.FlickrAPI(api_key, api_secret, format='parsed-json')
+def flickrAPIUser(username):
+    return flickrapi.FlickrAPI(api_key, api_secret, format='parsed-json', username=username)
