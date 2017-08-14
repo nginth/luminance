@@ -13,7 +13,7 @@ from .forms import RegistrationForm, LoginForm, ContestForm, AddUserToEventForm
 from .database import db_session
 from .models import User, Event
 from .auth import is_safe_url, login_manager
-from .flickr import flickrAPIUser
+from .flickr import flickrAPIUser, get_photo_urls
 
 # TODO: actually make modular like this is intended to lol
 pages = Blueprint('pages', __name__, template_folder='templates')
@@ -88,10 +88,12 @@ def contest():
 @login_required
 def flickr_test():
     flickr = flickrAPIUser(current_user.username)
-    photos = flickr.photos.getPopular(user_id='73509078@N00')['photos']['photo']
-    template_url = "https://farm{}.staticflickr.com/{}/{}_{}.jpg"
-    photo_urls = [template_url.format(p['farm'], p['server'], p['id'], p['secret']) for p in photos]
+    flickr.authenticate_via_browser(perms='read')
+    token = flickr.token_cache.token
+    photos = flickr.photos.getPopular(user_id=token.user_nsid)['photos']['photo']
+    photo_urls = get_photo_urls(photos)
     return render_template('photos.html', photo_urls=photo_urls)
+
 
 @pages.route('/secret')
 @login_required

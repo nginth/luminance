@@ -12,3 +12,7 @@ with open(os.getcwd() + '/secrets.json') as data_file:
 
 def flickrAPIUser(username):
     return flickrapi.FlickrAPI(api_key, api_secret, format='parsed-json', username=username)
+
+def get_photo_urls(photos):
+    template_url = "https://farm{}.staticflickr.com/{}/{}_{}.jpg"
+    return [template_url.format(p['farm'], p['server'], p['id'], p['secret']) for p in photos]
