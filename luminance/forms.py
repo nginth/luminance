@@ -7,6 +7,8 @@ from wtforms import (
     HiddenField,
     validators
 )
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired
 
 class RegistrationForm(Form):
     username = StringField('username', [validators.Length(min=1, max=25)])
@@ -27,3 +29,7 @@ class ContestForm(Form):
 class AddUserToEventForm(Form):
     event_id = HiddenField('event_id')
     submit = SubmitField('register')
+
+class PhotoForm(Form):
+    photo = FileField(validators=[FileRequired()])
+    submit = SubmitField('upload photo')
