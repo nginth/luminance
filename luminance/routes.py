@@ -94,12 +94,6 @@ def flickr_test():
     photo_urls = get_photo_urls(photos)
     return render_template('photos.html', photo_urls=photo_urls)
 
-
-@pages.route('/secret')
-@login_required
-def secret():
-    return 'hi ' + current_user.username
-
 @pages.route('/users/<string:username>')
 def profile_page(username):
     print(username)

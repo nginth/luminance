@@ -28,6 +28,7 @@ class User(Base):
     description = Column(String(20000))
     camera = Column(String(512))
     active = Column(Boolean)
+    photos = relationship("Photo")
 
     @property
     def is_active(self):
@@ -78,3 +79,15 @@ class Event(Base):
 
     def __repr__(self):
         return '<Event<{}> {}>'.format(self.type, self.name)
+
+class Photo(Base):
+    __tablename__ = 'photos'
+    id = Column(Integer, primary_key=True)
+    url = Column(String(2048))
+    user_id = Column(Integer, ForeignKey("users.id"))
+
+    def __init__(self, url=None):
+        self.url = url
+    
+    def __repr__(self):
+        return '<Photo @ {}>'.format(self.url)
