@@ -62,11 +62,18 @@ def event_upload(request, event, form):
     photo = form.photo.data
     filename = secure_filename(form.photo.data.filename)
     filename = current_user.username + '_' + filename
-    form.photo.data.save(getcwd() + '/luminance/static/photos/' + filename)
-    # flickr = flickrAPIUser(current_user.username)
-    # flickr.authenticate_via_browser(perms='write')
-    # resp = flickr.upload(fileobj=photo, filename=filename)
-    flash('Upload successful!')
+    abs_filename = getcwd() + '/luminance/static/photos/' + filename
+    form.photo.data.save(abs_filename)
+    flickr = flickrAPIUser(current_user.username)
+    flickr.authenticate_via_browser(perms='write')
+    with open(abs_filename) as f:
+        try:
+            resp = flickr.upload(fileobj=f, filename=filename)
+            flash('Upload successful!')
+            # print(resp)
+        except Exception as e:
+            print('Exception: {}'.format(e))
+            flash('Upload to flickr failed.')
     return redirect(url_for('events.event_list'))
 
     
