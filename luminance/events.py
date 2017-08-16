@@ -1,3 +1,4 @@
+from os import getcwd
 from flask import (
     current_app, 
     Blueprint, 
@@ -60,10 +61,11 @@ def event_upload(request, event, form):
 
     photo = form.photo.data
     filename = secure_filename(form.photo.data.filename)
-    flickr = flickrAPIUser(current_user.username)
-    flickr.authenticate_via_browser(perms='write')
-    resp = flickr.upload(fileobj=photo, filename=filename)
-    print(resp)
+    filename = current_user.username + '_' + filename
+    form.photo.data.save(getcwd() + '/luminance/static/photos/' + filename)
+    # flickr = flickrAPIUser(current_user.username)
+    # flickr.authenticate_via_browser(perms='write')
+    # resp = flickr.upload(fileobj=photo, filename=filename)
     flash('Upload successful!')
     return redirect(url_for('events.event_list'))
 
