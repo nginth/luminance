@@ -1,4 +1,5 @@
 from os import getcwd
+from traceback import print_exc
 from flask import (
     current_app, 
     Blueprint, 
@@ -62,18 +63,35 @@ def event_upload(request, event, form):
     photo = form.photo.data
     filename = secure_filename(form.photo.data.filename)
     filename = current_user.username + '_' + filename
-    abs_filename = getcwd() + '/luminance/static/photos/' + filename
-    form.photo.data.save(abs_filename)
-    flickr = flickrAPIUser(current_user.username)
-    flickr.authenticate_via_browser(perms='write')
-    with open(abs_filename) as f:
-        try:
-            resp = flickr.upload(fileobj=f, filename=filename)
-            flash('Upload successful!')
-            # print(resp)
-        except Exception as e:
-            print('Exception: {}'.format(e))
-            flash('Upload to flickr failed.')
+    try:
+        abs_filename = getcwd() + '/luminance/static/photos/' + filename
+        form.photo.data.save(abs_filename)
+    except Exception:
+        print_exc()
+        flash('Upload failed.')
+        return redirect(url_for('events.event_list'))
+    
+    flash('Upload successful!')
     return redirect(url_for('events.event_list'))
 
+def flickr_upload(username, abs_filename, filename):
+    flickr = flickrAPIUser(username)
+    flickr.authenticate_via_browser(perms='write')
     
+    with open(abs_filename) as f:
+        try:
+            resp = flickr.upload(
+                title=filename, 
+                description='', 
+                tags='', 
+                fileobj=f, 
+                filename=filename,
+                format='parsed-json'
+            )
+            flash('Upload successful!')
+            print(resp)
+            return True
+        except Exception as e:
+            print_exc()
+            flash('Upload to flickr failed.')
+            return False
