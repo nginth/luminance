@@ -7,7 +7,7 @@ from .routes import pages
 from .events import events
 
 def create_app(config_filename):
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='/static')
     app.config.from_pyfile(config_filename)
     db.init_app(app)
     login_manager.init_app(app)

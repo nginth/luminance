@@ -1,7 +1,7 @@
 from os import getcwd
 from traceback import print_exc
 from flask import (
-    current_app, 
+    current_app,
     Blueprint, 
     flash, 
     url_for, 
@@ -14,7 +14,7 @@ from werkzeug import secure_filename
 from werkzeug.datastructures import CombinedMultiDict
 from .forms import AddUserToEventForm, PhotoForm
 from .database import db_session
-from .models import Event
+from .models import Event, Photo
 from .flickr import flickrAPIUser
 
 events = Blueprint('events', __name__, template_folder='templates/events')
@@ -66,6 +66,11 @@ def event_upload(request, event, form):
     try:
         abs_filename = getcwd() + '/luminance/static/photos/' + filename
         form.photo.data.save(abs_filename)
+        p = Photo(url='/static/photos/' + filename)
+        current_user.photos.append(p)
+        db_session.add(p)
+        db_session.add(current_user)
+        db_session.commit()
     except Exception:
         print_exc()
         flash('Upload failed.')
