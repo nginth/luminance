@@ -3,5 +3,5 @@ venv
 secrets.json
 luminance/__pycache__/*
 notes.txt
-static/*
+static/photos/*
 .DS_Store
