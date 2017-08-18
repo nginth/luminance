@@ -5,7 +5,8 @@ from sqlalchemy import (
     Boolean, 
     Table, 
     ForeignKey,
-    DateTime
+    DateTime,
+    Enum
 )
 from sqlalchemy.orm import relationship
 from luminance.database import Base
@@ -16,6 +17,13 @@ users_contests = Table('users_events',
     Column('user_id', Integer(), ForeignKey('users.id')),
     Column('event_id', Integer(), ForeignKey('events.id'))
 )
+
+import enum
+class UserLevel(enum.Enum):
+    root = 0
+    admin = 1
+    moderator = 2
+    user = 3
 
 class User(Base):
     __tablename__ = 'users'
@@ -29,6 +37,7 @@ class User(Base):
     camera = Column(String(512))
     active = Column(Boolean)
     photos = relationship("Photo")
+    level = Column(Enum(UserLevel))
 
     @property
     def is_active(self):
@@ -42,12 +51,13 @@ class User(Base):
     def is_anonymous(self):
         return False
 
-    def __init__(self, username=None, email=None, password=None):
+    def __init__(self, username=None, email=None, password=None, level=UserLevel.user):
         self.username = username
         self.email = email
         self.exp = 0
         self.set_password(password)
         self.active = True
+        self.level = level
     
     def set_password(self, password):
         self.pw_hash = generate_password_hash(password)

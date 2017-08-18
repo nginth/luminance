@@ -13,6 +13,10 @@ def init_db():
     import luminance.models
     Base.metadata.create_all(bind=engine)
 
+'''
+    WARNING!!!! Calling this resets the entire public schema.
+    All data and tables not described in init_db will be destroyed.
+'''
 def reset_db():
     engine.execute("drop schema public cascade;")
     engine.execute("create schema public;")
