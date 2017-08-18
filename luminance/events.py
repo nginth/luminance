@@ -31,7 +31,7 @@ def event_list():
         if current_user in event.users:
             flash('You are already registered for this event!')
             return redirect(url_for('events.event_list'))
-        else: 
+        else:
             event.users.append(current_user)
             db_session.add(event)
             db_session.commit()
@@ -58,6 +58,9 @@ def event_upload(request, event, form):
     if current_user.is_anonymous:
         print('user not logged in')
         flash('You must be logged in to do this.')
+        return redirect(url_for('events.event_detail', event_id=event.id))
+    if current_user not in event.users:
+        flash('You must be registered for this event to do this.')
         return redirect(url_for('events.event_detail', event_id=event.id))
 
     photo = form.photo.data
