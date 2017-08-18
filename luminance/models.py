@@ -73,6 +73,7 @@ class Event(Base):
     type = Column(String(512))
     start_date = Column(DateTime)
     end_date = Column(DateTime)
+    photos = relationship("Photo")
 
     def __init__(self, name=None):
         self.name = name
@@ -85,6 +86,7 @@ class Photo(Base):
     id = Column(Integer, primary_key=True)
     url = Column(String(2048))
     user_id = Column(Integer, ForeignKey("users.id"))
+    event_id = Column(Integer, ForeignKey("events.id"))
 
     def __init__(self, url=None):
         self.url = url

@@ -12,3 +12,8 @@ Base.query = db_session.query_property()
 def init_db():
     import luminance.models
     Base.metadata.create_all(bind=engine)
+
+def reset_db():
+    engine.execute("drop schema public cascade;")
+    engine.execute("create schema public;")
+    init_db()
