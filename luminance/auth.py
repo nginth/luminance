@@ -15,8 +15,9 @@ def is_safe_url(target):
 def admin_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
-        if current_user.level != UserLevel.admin or current_user.level != UserLevel.root:
+        if current_user.level not in (UserLevel.admin, UserLevel.root):
             flash('Insufficient priviliges.')
+            print(current_user.level)
             return redirect(url_for('pages.index'))
         return f(*args, **kwargs)
     return decorator
