@@ -5,6 +5,7 @@ from .database import db, db_session
 from .auth import login_manager
 from .routes import pages
 from .events import events
+from .users import users
 
 def create_app(config_filename):
     app = Flask(__name__, static_url_path='/static')
@@ -20,6 +21,7 @@ def create_app(config_filename):
 app = create_app('config.py')
 app.register_blueprint(pages)
 app.register_blueprint(events, url_prefix='/events')
+app.register_blueprint(users, url_prefix='/users')
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
