@@ -25,6 +25,4 @@ app.register_blueprint(events, url_prefix='/events')
 def shutdown_session(exception=None):
     db_session.remove()
 
-import luminance.routes
-
 

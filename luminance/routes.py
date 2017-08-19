@@ -12,7 +12,7 @@ from flask_login import LoginManager, login_user, login_required, current_user, 
 from .forms import RegistrationForm, LoginForm, ContestForm, AddUserToEventForm
 from .database import db_session
 from .models import User, Event
-from .auth import is_safe_url, login_manager
+from .auth import is_safe_url, login_manager, admin_required
 from .flickr import flickrAPIUser, get_photo_urls
 
 # TODO: actually make modular like this is intended to lol
@@ -65,6 +65,7 @@ def signup():
 
 @pages.route('/contest', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def contest():
     form = ContestForm(request.form)
     if request.method == 'POST' and form.validate():
