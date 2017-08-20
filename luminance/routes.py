@@ -11,7 +11,7 @@ from flask import (
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from .forms import RegistrationForm, LoginForm, ContestForm, AddUserToEventForm
 from .database import db_session
-from .models import User, Event
+from .models import User, Event, UserLevel
 from .auth import is_safe_url, login_manager, admin_required
 from .flickr import flickrAPIUser, get_photo_urls
 

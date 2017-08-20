@@ -6,6 +6,7 @@ from .auth import login_manager
 from .routes import pages
 from .events import events
 from .users import users
+from .models import UserLevel
 
 def create_app(config_filename):
     app = Flask(__name__, static_url_path='/static')
@@ -22,6 +23,7 @@ app = create_app('config.py')
 app.register_blueprint(pages)
 app.register_blueprint(events, url_prefix='/events')
 app.register_blueprint(users, url_prefix='/users')
+app.add_template_global(UserLevel, 'UserLevel')
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
