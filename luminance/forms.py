@@ -33,3 +33,7 @@ class AddUserToEventForm(Form):
 class PhotoForm(Form):
     photo = FileField(validators=[FileRequired()])
     submit = SubmitField('upload photo')
+
+class ProfileForm(Form):
+    bio = StringField('bio', [validators.Length(max=19000)])
+    save = SubmitField('save')
