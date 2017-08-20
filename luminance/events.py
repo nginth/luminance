@@ -62,6 +62,11 @@ def event_upload(request, event, form):
     if current_user not in event.users:
         flash('You must be registered for this event to do this.')
         return redirect(url_for('events.event_detail', event_id=event.id))
+    user_photo = next((p for p in event.photos if p.user_id==current_user.id), None)
+    print(event.photos)
+    if user_photo != None:
+        flash('You have already uploaded a photo to this event.')
+        return redirect(url_for('events.event_detail', event_id=event.id))
 
     photo = form.photo.data
     filename = secure_filename(form.photo.data.filename)
@@ -71,8 +76,10 @@ def event_upload(request, event, form):
         form.photo.data.save(abs_filename)
         p = Photo(url='/static/photos/' + filename)
         current_user.photos.append(p)
+        event.photos.append(p)
         db_session.add(p)
         db_session.add(current_user)
+        db_session.add(event)
         db_session.commit()
     except Exception:
         print_exc()
