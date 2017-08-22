@@ -45,10 +45,14 @@ def event_list():
 def event_detail(event_id):
     event = Event.query.filter(Event.id == event_id).first()
     form = PhotoForm(CombinedMultiDict((request.files, request.form)))
+    user_photo = next((p for p in event.photos if p.user_id==current_user.id), None) if not current_user.is_anonymous else None
     if request.method == 'POST':
+        if user_photo != None:
+            flash('You have already uploaded a photo to this event.')
+            return redirect(url_for('events.event_detail', event_id=event.id))
         return event_upload(request, event, form)
 
-    return render_template('event_detail.html', event=event, form=form)
+    return render_template('event_detail.html', event=event, form=form, photo=user_photo)
 
 def event_upload(request, event, form):
     if not form.validate():
@@ -62,12 +66,7 @@ def event_upload(request, event, form):
     if current_user not in event.users:
         flash('You must be registered for this event to do this.')
         return redirect(url_for('events.event_detail', event_id=event.id))
-    user_photo = next((p for p in event.photos if p.user_id==current_user.id), None)
-    print(event.photos)
-    if user_photo != None:
-        flash('You have already uploaded a photo to this event.')
-        return redirect(url_for('events.event_detail', event_id=event.id))
-
+    
     photo = form.photo.data
     filename = secure_filename(form.photo.data.filename)
     filename = current_user.username + '_' + filename
