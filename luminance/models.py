@@ -51,6 +51,10 @@ class User(Base):
     def is_anonymous(self):
         return False
 
+    @property
+    def is_admin(self):
+        return self.level == UserLevel.admin or self.level == UserLevel.root
+
     def __init__(self, username=None, email=None, password=None, level=UserLevel.user):
         self.username = username
         self.email = email
