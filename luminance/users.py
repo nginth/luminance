@@ -32,6 +32,10 @@ def profile_page(username):
 @users.route('/<string:username>/edit', methods=['GET', 'POST'])
 def edit_profile(username):
     user = User.query.filter(User.username == username).first()
+    if not user.id == current_user.id and not current_user.is_admin:
+        flash('Insufficient priviliges.')
+        return redirect(url_for('users.profile_page', username=username))
+
     form = ProfileForm(request.form)
     if request.method == 'POST' and form.validate():
         user.description = form.bio.data
