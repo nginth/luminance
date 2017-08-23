@@ -75,6 +75,11 @@ class User(Base):
     def __repr__(self):
         return '<User {}, exp {}>'.format(self.username, self.exp)
 
+class EventType(enum.Enum):
+    voted = 0
+    chosen = 1
+    random = 2
+
 class Event(Base):
     __tablename__ = 'events'
     id = Column(Integer, primary_key=True)
@@ -84,7 +89,7 @@ class Event(Base):
         secondary=users_contests,
         backref="events"
     )
-    type = Column(String(512))
+    type = Column(Enum(EventType))
     start_date = Column(DateTime)
     end_date = Column(DateTime)
     photos = relationship("Photo")
