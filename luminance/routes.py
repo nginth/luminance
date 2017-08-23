@@ -85,6 +85,12 @@ def contest():
 
     return render_template('create_contest.html', form=form)
 
+@pages.route('/admin')
+@login_required
+@admin_required
+def admin_panel():
+    return render_template('admin_panel.html')
+
 @pages.route('/photos/test')
 @login_required
 def flickr_test():
