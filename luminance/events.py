@@ -75,6 +75,7 @@ def event_upload(request, event, form):
         form.photo.data.save(abs_filename)
         p = Photo(url='/static/photos/' + filename)
         current_user.photos.append(p)
+        current_user.exp += 1
         event.photos.append(p)
         db_session.add(p)
         db_session.add(current_user)
