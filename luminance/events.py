@@ -54,6 +54,12 @@ def event_detail(event_id):
 
     return render_template('event_detail.html', event=event, form=form, photo=user_photo)
 
+@events.route('/<int:event_id>/admin', methods=['GET', 'POST'])
+def event_admin(event_id):
+    event = Event.query.filter(Event.id == event_id).first()
+
+    return render_template('event_admin.html', event=event)
+
 def event_upload(request, event, form):
     if not form.validate():
         print('upload failed')
