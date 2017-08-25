@@ -57,6 +57,9 @@ def event_detail(event_id):
 @events.route('/<int:event_id>/admin', methods=['GET', 'POST'])
 def event_admin(event_id):
     event = Event.query.filter(Event.id == event_id).first()
+    if not current_user.id in event.admins:
+        flash('Insufficient priviliges.')
+        return redirect(url_for('events.event_detail', event_id=event_id))
 
     return render_template('event_admin.html', event=event)
 

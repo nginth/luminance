@@ -9,10 +9,11 @@ from sqlalchemy import (
     Enum
 )
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects import postgresql
 from luminance.database import Base
 from werkzeug.security import generate_password_hash, check_password_hash
 
-users_contests = Table('users_events', 
+users_events = Table('users_events', 
     Base.metadata,
     Column('user_id', Integer(), ForeignKey('users.id')),
     Column('event_id', Integer(), ForeignKey('events.id'))
@@ -86,9 +87,10 @@ class Event(Base):
     name = Column(String(1024), unique=True)
     users = relationship(
         "User",
-        secondary=users_contests,
+        secondary=users_events,
         backref="events"
     )
+    admins = Column(postgresql.ARRAY(Integer))
     type = Column(Enum(EventType))
     start_date = Column(DateTime)
     end_date = Column(DateTime)

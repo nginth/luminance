@@ -15,7 +15,6 @@ from .models import User, Event, EventType, UserLevel
 from .auth import is_safe_url, login_manager, admin_required
 from .flickr import flickrAPIUser, get_photo_urls
 
-# TODO: actually make modular like this is intended to lol
 pages = Blueprint('pages', __name__, template_folder='templates')
 
 @pages.route('/')
@@ -53,7 +52,6 @@ def logout():
 @pages.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = RegistrationForm(request.form)
-    print(request.form)
     if request.method == 'POST' and form.validate():
         user = User(username=form.username.data, password=form.password.data)
         db_session.add(user)
@@ -71,13 +69,12 @@ def contest():
     if request.method == 'POST' and form.validate():
         contest = Event(name=form.name.data)
         contest.type = EventType.chosen
-        print(form.start_date.data)
-        print(form.end_date.data)
         if form.start_date.data:
             contest.start_date = form.start_date.data
         if form.end_date.data:
             contest.end_date = form.end_date.data
         contest.users.append(current_user)
+        contest.admins = [current_user.id]
         db_session.add(contest)
         db_session.commit()
         flash('Contest created.')
