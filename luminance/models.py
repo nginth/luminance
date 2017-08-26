@@ -81,6 +81,11 @@ class EventType(enum.Enum):
     chosen = 1
     random = 2
 
+class EventStatus(enum.Enum):
+    inactive = 0
+    active = 1
+    completed = 2
+
 class Event(Base):
     __tablename__ = 'events'
     id = Column(Integer, primary_key=True)
@@ -95,6 +100,7 @@ class Event(Base):
     start_date = Column(DateTime)
     end_date = Column(DateTime)
     photos = relationship("Photo")
+    status = Column(Enum(EventStatus))
 
     def __init__(self, name=None):
         self.name = name

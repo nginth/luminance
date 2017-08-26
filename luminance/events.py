@@ -14,7 +14,7 @@ from werkzeug import secure_filename
 from werkzeug.datastructures import CombinedMultiDict
 from .forms import AddUserToEventForm, PhotoForm
 from .database import db_session
-from .models import Event, EventType, Photo
+from .models import Event, EventType, EventStatus, Photo
 from .flickr import flickrAPIUser
 
 events = Blueprint('events', __name__, template_folder='templates/events')
