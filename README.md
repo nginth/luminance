@@ -1,8 +1,9 @@
 ## Luminance 
 
-Luminance is a scalable, multitenant, multithreaded, big data, functional, lambda calculus, distributed, fault tolerant, generative model, deep learning-leveraging, neural network-loving webapp.
-
-What it actually does is TBD but that sounds pretty cool right?
+### Install
+1. Have a postgres database at localhost/luminance.
+2. `export FLASK_APP="luminance/luminance.py"`
+3. `flask run`
 
 ### Technologies
 - Python (Flask, SQLAlchemy)
