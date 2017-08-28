@@ -100,6 +100,7 @@ class Event(Base):
     start_date = Column(DateTime)
     end_date = Column(DateTime)
     photos = relationship("Photo")
+    winner_id = Column(Integer)
     status = Column(Enum(EventStatus))
 
     def __init__(self, name=None):

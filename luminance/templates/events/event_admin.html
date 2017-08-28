@@ -7,14 +7,18 @@
         <div>Start Date: {{ event.start_date }}</div>
         <div>End Date: {{ event.end_date }}</div>
         <ul>
+        <form method="POST">
         {% for photo in event.photos %}
             <li>
                 <div>id of photo user: {{ photo.user_id }}</div>
                 <div>
                     <img src="{{ photo.url }}" class="img-fluid"/>
                 </div>
+                <div>{{ form.photo_id(value=photo.id) }}</div>
+                <div>{{ form.submit() }}</div>
             </li>
         {% endfor %}
+        </form>
         </ul>
     {% else %}
         <div> Event not found. </div>

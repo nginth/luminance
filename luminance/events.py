@@ -12,9 +12,9 @@ from flask import (
 from flask_login import current_user
 from werkzeug import secure_filename
 from werkzeug.datastructures import CombinedMultiDict
-from .forms import AddUserToEventForm, PhotoForm
+from .forms import AddUserToEventForm, PhotoForm, ChosenEventForm
 from .database import db_session
-from .models import Event, EventType, EventStatus, Photo
+from .models import Event, EventType, EventStatus, Photo, User
 from .flickr import flickrAPIUser
 
 events = Blueprint('events', __name__, template_folder='templates/events')
@@ -52,16 +52,32 @@ def event_detail(event_id):
             return redirect(url_for('events.event_detail', event_id=event.id))
         return event_upload(request, event, form)
 
-    return render_template('event_detail.html', event=event, form=form, photo=user_photo)
+    winner = Photo.query.filter(Photo.id == event.winner_id).first() if event.winner_id else None
+    print(winner)
+    return render_template('event_detail.html', event=event, form=form, photo=user_photo, winner=winner)
 
 @events.route('/<int:event_id>/admin', methods=['GET', 'POST'])
 def event_admin(event_id):
     event = Event.query.filter(Event.id == event_id).first()
+    form = ChosenEventForm(request.form)
+
     if not current_user.id in event.admins:
         flash('Insufficient priviliges.')
         return redirect(url_for('events.event_detail', event_id=event_id))
 
-    return render_template('event_admin.html', event=event)
+    if request.method == 'POST' and form.validate():
+        event.status = EventStatus.completed
+        event.winner_id = form.photo_id.data
+        user_id = Photo.query.filter(Photo.id == event.winner_id).first().user_id
+        user = User.query.filter(User.id == user_id).first()
+        user.exp += 100
+        db_session.add(event)
+        db_session.add(user)
+        db_session.commit()
+        flash('Winner chosen!')
+        return redirect(url_for('events.event_detail', event_id=event_id))
+
+    return render_template('event_admin.html', event=event, form=form)
 
 def event_upload(request, event, form):
     if not form.validate():
