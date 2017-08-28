@@ -3,6 +3,9 @@
 <div class="container">
     {% if event %}
         <h3>Name: {{ event.name }}</h3>
+        {% if current_user.id in event.admins %}
+            <a href="/events/{{event.id}}/admin">Edit event</a>
+        {% endif %}
         <div>Type: {{ event.type }}</div>
         <div>Status: {{ event.status }}</div>
         <div>Start Date: {{ event.start_date }}</div>
