@@ -3,9 +3,12 @@
 <div class="container">
     {% if user %}
         <h3>{{ user.username }}'s Profile</h3>
-        <h4>Bio</h4>
+        <h5>Bio</h5>
         <div>
             {{ user.description }}
+        </div>
+        <div>
+            Experience: {{ user.exp }}
         </div>
         {% if user.id == current_user.id or current_user.is_admin %}
             <a href="/users/{{ user.username }}/edit">edit profile</a>
