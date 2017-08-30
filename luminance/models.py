@@ -12,6 +12,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects import postgresql
 from luminance.database import Base
 from werkzeug.security import generate_password_hash, check_password_hash
+from math import sqrt, floor
 
 users_events = Table('users_events', 
     Base.metadata,
@@ -55,6 +56,13 @@ class User(Base):
     @property
     def is_admin(self):
         return self.level == UserLevel.admin or self.level == UserLevel.root
+
+    @property
+    def exp_level(self):
+        # linearly rising experience gap
+        return floor((sqrt(100 * (2 * self.exp + 25)) + 50) / 100)
+
+        
 
     def __init__(self, username=None, email=None, password=None, level=UserLevel.user):
         self.username = username
