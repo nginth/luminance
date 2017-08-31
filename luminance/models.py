@@ -62,8 +62,6 @@ class User(Base):
         # linearly rising experience gap
         return floor((sqrt(100 * (2 * self.exp + 25)) + 50) / 100)
 
-        
-
     def __init__(self, username=None, email=None, password=None, level=UserLevel.user):
         self.username = username
         self.email = email
