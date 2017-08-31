@@ -5,6 +5,7 @@ from wtforms import (
     SubmitField,
     DateTimeField,
     HiddenField,
+    IntegerField,
     validators
 )
 from flask_wtf import FlaskForm
@@ -24,6 +25,7 @@ class ContestForm(Form):
     name = StringField('name', [validators.Length(min=1, max=1024)])
     start_date = DateTimeField('start_date', format="%Y-%m-%dT%H:%M", validators=[validators.Optional()])
     end_date = DateTimeField('end_date', format="%Y-%m-%dT%H:%M", validators=[validators.Optional()])
+    max_registrants = IntegerField('max_registrants', validators=[validators.Optional()])
     submit = SubmitField('create')
 
 class AddUserToEventForm(Form):

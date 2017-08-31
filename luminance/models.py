@@ -108,6 +108,7 @@ class Event(Base):
     photos = relationship("Photo")
     winner_id = Column(Integer)
     status = Column(Enum(EventStatus))
+    max_registrants = Column(Integer)
 
     def __init__(self, name=None):
         self.name = name

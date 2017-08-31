@@ -73,6 +73,8 @@ def contest():
             contest.start_date = form.start_date.data
         if form.end_date.data:
             contest.end_date = form.end_date.data
+        if form.max_registrants.data:
+            contest.max_registrants = form.max_registrants.data
         contest.users.append(current_user)
         contest.admins = [current_user.id]
         contest.status = EventStatus.inactive
