@@ -61,30 +61,6 @@ def signup():
 
     return render_template('signup.html', form=form)
 
-@pages.route('/contest', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def contest():
-    form = ContestForm(request.form)
-    if request.method == 'POST' and form.validate():
-        contest = Event(name=form.name.data)
-        contest.type = EventType.chosen
-        if form.start_date.data:
-            contest.start_date = form.start_date.data
-        if form.end_date.data:
-            contest.end_date = form.end_date.data
-        if form.max_registrants.data:
-            contest.max_registrants = form.max_registrants.data
-        contest.users.append(current_user)
-        contest.admins = [current_user.id]
-        contest.status = EventStatus.inactive
-        db_session.add(contest)
-        db_session.commit()
-        flash('Contest created.')
-        return redirect(url_for('pages.contest'))
-
-    return render_template('create_contest.html', form=form)
-
 @pages.route('/admin')
 @login_required
 @admin_required

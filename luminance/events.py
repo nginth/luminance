@@ -9,13 +9,14 @@ from flask import (
     redirect,
     render_template
 )
-from flask_login import current_user
+from flask_login import current_user, login_required, login_manager
 from werkzeug import secure_filename
 from werkzeug.datastructures import CombinedMultiDict
-from .forms import AddUserToEventForm, PhotoForm, ChosenEventForm
+from .forms import AddUserToEventForm, PhotoForm, ChosenEventForm, ContestForm
 from .database import db_session
 from .models import Event, EventType, EventStatus, Photo, User
 from .flickr import flickrAPIUser
+from .auth import admin_required
 
 events = Blueprint('events', __name__, template_folder='templates/events')
 
@@ -78,6 +79,30 @@ def event_admin(event_id):
         return redirect(url_for('events.event_detail', event_id=event_id))
 
     return render_template('event_admin.html', event=event, form=form)
+
+@events.route('/contest', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def contest():
+    form = ContestForm(request.form)
+    if request.method == 'POST' and form.validate():
+        contest = Event(name=form.name.data)
+        contest.type = EventType.chosen
+        if form.start_date.data:
+            contest.start_date = form.start_date.data
+        if form.end_date.data:
+            contest.end_date = form.end_date.data
+        if form.max_registrants.data:
+            contest.max_registrants = form.max_registrants.data
+        contest.users.append(current_user)
+        contest.admins = [current_user.id]
+        contest.status = EventStatus.inactive
+        db_session.add(contest)
+        db_session.commit()
+        flash('Contest created.')
+        return redirect(url_for('events.contest'))
+
+    return render_template('create_contest.html', form=form)
 
 def event_upload(request, event, form):
     if not form.validate():

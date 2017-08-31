@@ -3,7 +3,7 @@
 <div class="container">
     <h3>Create contest</h3>
     <div>
-        <form method="POST" action="/contest">
+        <form method="POST" action="/events/contest">
             <div>{{ form.name.label }}: {{ form.name() }}</div>
             <div>{{ form.start_date.label }}: {{ form.start_date(type="datetime-local") }}</div>
             <div>{{ form.end_date.label }}: {{ form.end_date(type="datetime-local") }}</div>
