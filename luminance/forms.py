@@ -38,6 +38,7 @@ class PhotoForm(Form):
 
 class ProfileForm(Form):
     bio = StringField('bio', [validators.Length(max=19000)])
+    exp = StringField('exp')
     save = SubmitField('save')
 
 class ChosenEventForm(Form):
