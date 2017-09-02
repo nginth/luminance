@@ -26,7 +26,7 @@ class ContestForm(Form):
     start_date = DateTimeField('start_date', format="%Y-%m-%dT%H:%M", validators=[validators.Optional()])
     end_date = DateTimeField('end_date', format="%Y-%m-%dT%H:%M", validators=[validators.Optional()])
     max_registrants = IntegerField('max_registrants', validators=[validators.Optional()])
-    submit = SubmitField('create')
+    submit = SubmitField('save')
 
 class AddUserToEventForm(Form):
     event_id = HiddenField('event_id')

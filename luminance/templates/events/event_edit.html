@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+    {% if event %}
+        <form method="POST" action="/events/{{event.id}}/edit">
+            <div>{{ form.name.label }}: {{ form.name(value=event.name) }}</div>
+            <div>{{ form.start_date.label }}: {{ form.start_date(type="datetime-local", value=event.start_date) }}</div>
+            <div>{{ form.end_date.label }}: {{ form.end_date(type="datetime-local", value=event.end_date) }}</div>
+            <div>{{ form.max_registrants.label }}: {{ form.max_registrants(value=event.max_registrants) }}</div>
+            <div>{{ form.submit() }}</div>
+        </form>
+    {% else %}
+        <div> Event not found. </div>
+    {% endif %}
+</div>
+{% endblock %}

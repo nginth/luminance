@@ -80,6 +80,26 @@ def event_admin(event_id):
 
     return render_template('event_admin.html', event=event, form=form)
 
+@events.route('/<int:event_id>/edit', methods=['GET', 'POST'])
+def event_edit(event_id):
+    event = Event.query.filter(Event.id == event_id).first()
+    form = ContestForm(request.form)
+
+    if not current_user.id in event.admins:
+        flash('Insufficient priviliges.')
+        return redirect(url_for('events.event_detail', event_id=event_id))
+
+    if request.method == 'POST' and form.validate():
+        event.name = form.name.data
+        event.start_date = form.start_date.data
+        event.end_date = form.end_date.data
+        db_session.add(event)
+        db_session.commit()
+        flash('Changes saved.')
+        return redirect(url_for('events.event_detail', event_id=event_id))
+
+    return render_template('event_edit.html', event=event, form=form)
+
 @events.route('/contest', methods=['GET', 'POST'])
 @login_required
 @admin_required
