@@ -4,7 +4,8 @@
     {% if event %}
         <h3>Name: {{ event.name }}</h3>
         {% if current_user.id in event.admins %}
-            <a href="/events/{{event.id}}/admin">Edit event</a>
+            <div><a href="/events/{{event.id}}/edit">Edit event</a></div>
+            <div><a href="/events/{{event.id}}/admin">Choose winner</a></div>
         {% endif %}
         <div>Type: {{ event.type }}</div>
         <div>Status: {{ event.status }}</div>
