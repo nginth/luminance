@@ -18,8 +18,14 @@ from .flickr import flickrAPIUser, get_photo_urls
 pages = Blueprint('pages', __name__, template_folder='templates')
 
 @pages.route('/')
-def index(): 
-    return render_template('index.html')
+def index():
+    events = None
+    user = None
+    if not current_user.is_anonymous:
+        user = current_user
+        events = user.events
+        
+    return render_template('index.html', events=events, user=user)
 
 @pages.route('/login', methods=['GET', 'POST'])
 def login():

@@ -2,11 +2,21 @@
 {% block body %}
 <div class="container">
     <h3>Luminance</h3>
-    <div>
-        {% if current_user.is_authenticated %}
-        <p>Hello {{ current_user.username }}! Exp: {{ current_user.exp }} </p>
+    <div class="row">
+        {% if user %}
+            <div class="col-sm-6">Hello {{ current_user.username }}! Exp: {{ current_user.exp }} </div>
+            {% if events %}
+                <div class="col-sm-6"> 
+                    <h4>Events you're entered in: </h4>
+                    <ul>
+                        {% for event in events %}
+                            <li> <a href="/events/{{events.id}}">{{event.name}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
         {% else %}
-        <p> Hi, welcome to Luminance! </p>
+            <p> Hi, welcome to Luminance! </p>
         {% endif %}
     </div>
 </div>
