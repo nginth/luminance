@@ -1,11 +1,9 @@
-import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-POSTGRES_DB_URL = os.environ['DATABASE_URL'] if 'DATABASE_URL' in os.environ else 'postgresql://localhost:5432/luminance'
 engine = create_engine('postgresql://localhost:5432/luminance', convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 Base = declarative_base()
