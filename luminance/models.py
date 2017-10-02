@@ -1,9 +1,9 @@
 from sqlalchemy import (
-    Column, 
-    Integer, 
-    String, 
-    Boolean, 
-    Table, 
+    Column,
+    Integer,
+    String,
+    Boolean,
+    Table,
     ForeignKey,
     DateTime,
     Enum
@@ -14,18 +14,21 @@ from luminance.database import Base
 from werkzeug.security import generate_password_hash, check_password_hash
 from math import sqrt, floor
 
-users_events = Table('users_events', 
-    Base.metadata,
-    Column('user_id', Integer(), ForeignKey('users.id')),
-    Column('event_id', Integer(), ForeignKey('events.id'))
-)
+users_events = Table('users_events',
+                     Base.metadata,
+                     Column('user_id', Integer(), ForeignKey('users.id')),
+                     Column('event_id', Integer(), ForeignKey('events.id'))
+                     )
 
 import enum
+
+
 class UserLevel(enum.Enum):
     root = 0
     admin = 1
     moderator = 2
     user = 3
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -44,7 +47,7 @@ class User(Base):
     @property
     def is_active(self):
         return self.active
-    
+
     @property
     def is_authenticated(self):
         return True
@@ -69,28 +72,31 @@ class User(Base):
         self.set_password(password)
         self.active = True
         self.level = level
-    
+
     def set_password(self, password):
         self.pw_hash = generate_password_hash(password)
 
     def authenticate(self, password):
         return check_password_hash(self.pw_hash, password)
-    
+
     def get_id(self):
         return self.id
 
     def __repr__(self):
         return '<User {}, exp {}>'.format(self.username, self.exp)
 
+
 class EventType(enum.Enum):
     voted = 0
     chosen = 1
     random = 2
 
+
 class EventStatus(enum.Enum):
     inactive = 0
     active = 1
     completed = 2
+
 
 class Event(Base):
     __tablename__ = 'events'
@@ -116,6 +122,7 @@ class Event(Base):
     def __repr__(self):
         return '<Event<{}> {}>'.format(self.type, self.name)
 
+
 class Photo(Base):
     __tablename__ = 'photos'
     id = Column(Integer, primary_key=True)
@@ -125,6 +132,6 @@ class Photo(Base):
 
     def __init__(self, url=None):
         self.url = url
-    
+
     def __repr__(self):
         return '<Photo @ {}>'.format(self.url)

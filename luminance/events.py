@@ -2,10 +2,10 @@ from os import getcwd
 from traceback import print_exc
 from flask import (
     current_app,
-    Blueprint, 
-    flash, 
-    url_for, 
-    request, 
+    Blueprint,
+    flash,
+    url_for,
+    request,
     redirect,
     render_template
 )
@@ -20,6 +20,7 @@ from .auth import admin_required
 
 events = Blueprint('events', __name__, template_folder='templates/events')
 
+
 @events.route('/', methods=['GET', 'POST'])
 def event_list():
     form = AddUserToEventForm(request.form)
@@ -27,7 +28,7 @@ def event_list():
         if current_user.is_anonymous or not current_user.is_authenticated:
             flash('You must log in to register for events.')
             return redirect(url_for('events.event_list'))
-        
+
         event = Event.query.filter(Event.id == form.event_id.data).first()
         if current_user in event.users:
             flash('You are already registered for this event!')
@@ -42,20 +43,24 @@ def event_list():
         events = Event.query.limit(10)
         return render_template('events.html', events=events, form=form)
 
+
 @events.route('/<int:event_id>', methods=['GET', 'POST'])
 def event_detail(event_id):
     event = Event.query.filter(Event.id == event_id).first()
     form = PhotoForm(CombinedMultiDict((request.files, request.form)))
-    user_photo = next((p for p in event.photos if p.user_id==current_user.id), None) if not current_user.is_anonymous else None
+    user_photo = next((p for p in event.photos if p.user_id ==
+                       current_user.id), None) if not current_user.is_anonymous else None
     if request.method == 'POST':
         if user_photo != None:
             flash('You have already uploaded a photo to this event.')
             return redirect(url_for('events.event_detail', event_id=event.id))
         return event_upload(request, event, form)
 
-    winner = Photo.query.filter(Photo.id == event.winner_id).first() if event.winner_id else None
+    winner = Photo.query.filter(
+        Photo.id == event.winner_id).first() if event.winner_id else None
     print(winner)
     return render_template('event_detail.html', event=event, form=form, photo=user_photo, winner=winner)
+
 
 @events.route('/<int:event_id>/admin', methods=['GET', 'POST'])
 def event_admin(event_id):
@@ -69,7 +74,8 @@ def event_admin(event_id):
     if request.method == 'POST' and form.validate():
         event.status = EventStatus.completed
         event.winner_id = form.photo_id.data
-        user_id = Photo.query.filter(Photo.id == event.winner_id).first().user_id
+        user_id = Photo.query.filter(
+            Photo.id == event.winner_id).first().user_id
         user = User.query.filter(User.id == user_id).first()
         user.exp += 100
         db_session.add(event)
@@ -79,6 +85,7 @@ def event_admin(event_id):
         return redirect(url_for('events.event_detail', event_id=event_id))
 
     return render_template('event_admin.html', event=event, form=form)
+
 
 @events.route('/<int:event_id>/edit', methods=['GET', 'POST'])
 def event_edit(event_id):
@@ -99,6 +106,7 @@ def event_edit(event_id):
         return redirect(url_for('events.event_detail', event_id=event_id))
 
     return render_template('event_edit.html', event=event, form=form)
+
 
 @events.route('/contest', methods=['GET', 'POST'])
 @login_required
@@ -124,6 +132,7 @@ def contest():
 
     return render_template('create_contest.html', form=form)
 
+
 def event_upload(request, event, form):
     if not form.validate():
         print('upload failed')
@@ -136,7 +145,7 @@ def event_upload(request, event, form):
     if current_user not in event.users:
         flash('You must be registered for this event to do this.')
         return redirect(url_for('events.event_detail', event_id=event.id))
-    
+
     photo = form.photo.data
     filename = secure_filename(form.photo.data.filename)
     filename = current_user.username + '_' + filename
@@ -155,21 +164,22 @@ def event_upload(request, event, form):
         print_exc()
         flash('Upload failed.')
         return redirect(url_for('events.event_list'))
-    
+
     flash('Upload successful!')
     return redirect(url_for('events.event_list'))
+
 
 def flickr_upload(username, abs_filename, filename):
     flickr = flickrAPIUser(username)
     flickr.authenticate_via_browser(perms='write')
-    
+
     with open(abs_filename) as f:
         try:
             resp = flickr.upload(
-                title=filename, 
-                description='', 
-                tags='', 
-                fileobj=f, 
+                title=filename,
+                description='',
+                tags='',
+                fileobj=f,
                 filename=filename,
                 format='parsed-json'
             )

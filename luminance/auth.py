@@ -6,11 +6,13 @@ from .models import UserLevel
 
 login_manager = LoginManager()
 
+
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and \
-           ref_url.netloc == test_url.netloc
+        ref_url.netloc == test_url.netloc
+
 
 def admin_required(f):
     @wraps(f)
@@ -21,6 +23,3 @@ def admin_required(f):
             return redirect(url_for('pages.index'))
         return f(*args, **kwargs)
     return decorator
-
-
-    
