@@ -5,7 +5,7 @@
         <h3><a href="/users/{{user.username}}">{{ user.username }}'s Profile</a></h3>
         <form method="post">
             <div>{{ form.bio.label }} {{ form.bio(value=user.description) }}</div>
-            <div>{{ form.exp.label }} {{ form.exp(value=user.exp) }}</div>
+            <div>{{ form.exp.label }}: {{ user.exp }}</div>
             <div>{{ form.save()}}</div>
         </form>
     {% else %}

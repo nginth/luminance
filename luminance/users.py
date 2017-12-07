@@ -42,7 +42,6 @@ def edit_profile(username):
     form = ProfileForm(request.form)
     if request.method == 'POST' and form.validate():
         user.description = form.bio.data
-        user.exp = form.exp.data
         db_session.add(user)
         db_session.commit()
         flash('Profile saved.')
